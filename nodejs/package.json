@@ -5,7 +5,8 @@
   "dependencies": {
      "http": "*",
      "fs": "*",
-     "querystring": "*"
+     "querystring": "*",
+     "pg": "*"
    },
   "main": "server.js",
   "scripts": {
