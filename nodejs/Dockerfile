@@ -1,10 +1,16 @@
+# Install base software
+
 FROM ubuntu:14.04
 
 RUN apt-get update && apt-get -y install curl
 
-RUN curl -sL https://deb.nodesource.com/setup_4.x | bash -
+# Install Node.js, see https://github.com/nodesource/distributions
+
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 
 RUN apt-get update && apt-get install -y nodejs
+
+# Install PostgreSQL, see https://docs.docker.com/engine/examples/postgresql_service/#installing-postgresql-on-docker
 
 RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
 
@@ -12,9 +18,13 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" > /etc
 
 RUN apt-get update && apt-get install -y python-software-properties software-properties-common postgresql-9.3 postgresql-client-9.3 postgresql-contrib-9.3
 
+# Install app
+
 RUN mkdir -p /var/app
 COPY . /var/app
 RUN cd /var/app && npm install
+
+# Configure PostgreSQL, see https://docs.docker.com/engine/examples/postgresql_service/#installing-postgresql-on-docker
 
 USER postgres
 
@@ -27,6 +37,8 @@ EXPOSE 5050
 
 RUN service postgresql start && psql -c "create database pgdb;" && psql -c "create role pgrole with login password 'pgrole'; grant all privileges on database pgdb to pgrole;"
 
+# Start services
+
 WORKDIR /var/app
 
-CMD service postgresql start && pwd && ls && node server.js
+CMD service postgresql start && pwd && ls && node --version && node server.js
