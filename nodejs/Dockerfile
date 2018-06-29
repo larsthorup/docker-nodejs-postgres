@@ -35,7 +35,8 @@ RUN echo "listen_addresses='*'" >> /etc/postgresql/9.6/main/postgresql.conf
 EXPOSE 5432
 EXPOSE 5050
 
-RUN service postgresql start && psql -c "create database pgdb;" && psql -c "create role pgrole with login password 'pgrole'; grant all privileges on database pgdb to pgrole;"
+RUN service postgresql start && psql -c "alter user postgres with superuser password 'postgres';" && psql -c "create database pgdb;"
+# && psql -c "create role pgrole with login password 'pgrole'; grant all privileges on database pgdb to pgrole;"
 
 # Start services
 
